@@ -25,7 +25,7 @@ class MailgunAPI(object):
 		return "%s(%s, %s) instance at %s" % (self.__class__.__name__, self.api_key, self.domain, hex(id(self)))
 
 	def __getattr__(self, name):
-		if name not in self._instances:
+		if name not in self._instances or self._instances[name]._pk != self._pk:
 			if name in self.subclasses:
 				self._instances[name] = self.subclasses[name](self.api_key, self.domain, self._pk, name)
 				self._pk = None
@@ -54,17 +54,26 @@ class MailgunAPI(object):
 			else:
 				self._pk = pk
 
-	def _request(self, method, **kwargs):
+	@staticmethod
+	def _clean(data=None):
+		if data and isinstance(data, dict):
+			if 'pk' in data:
+				del data['pk']
+			if 'self' in data:
+				del data['self']
+		return data
+
+	def _request(self, method, params=None, data=None):
 		assert method.upper() in self.ALLOWED_METHODS, '%s method is not allowed.' % method.upper()
-		kw = {
+		kwargs = {
 			'method': method,
 			'url': self.api_url,
 			'auth': self.auth,
-			'params': kwargs if method == 'get' else {},
-			'data': kwargs if method in ('post', 'put') else {},
+			'params': self._clean(params),
+			'data': self._clean(data),
 		}
-		r = requests.request(**kw)
-		print(r.request.method, r.request.url, r.request.body)
+		r = requests.request(**kwargs)
+		# print(r.request.method, r.request.url, r.request.body)
 		if not r.ok:
 			r.raise_for_status()
 		return r.json()
@@ -74,18 +83,18 @@ class MailgunAPI(object):
 		return self
 
 	def all(self, **kwargs):
-		return self._request('get', **kwargs)
+		return self._request('get', params=locals())
 
 	def get(self, pk, **kwargs):
 		self._set_pk(pk)
-		return self._request('get', **kwargs)
+		return self._request('get', params=locals())
 
 	def create(self, **kwargs):
-		return self._request('post', **kwargs)
+		return self._request('post', data=locals())
 
 	def update(self, pk, **kwargs):
 		self._set_pk(pk)
-		return self._request('put', **kwargs)
+		return self._request('put', data=locals())
 
 	def delete(self, pk):
 		return self._request('delete')

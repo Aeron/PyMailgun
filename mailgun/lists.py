@@ -13,21 +13,21 @@ class MailingListMembers(MailgunAPI):
 	def all(self, subscribed=None, limit=100, skip=0):
 		if subscribed:
 			assert subscribed in self.SUBSCRIBED, INVALID_SUBSCRIBED_MSG % self.SUBSCRIBED
-		return super(MailingListMembers, self).all(subscribed=subscribed, limit=limit, skip=skip)
+		return super(MailingListMembers, self).all(params=locals())
 
 	def create(self, address, name=None, vars=None, subscribed=SUBSCRIBED[0], upsert=UPSERT[1]):
 		if subscribed:
 			assert subscribed in self.SUBSCRIBED, INVALID_SUBSCRIBED_MSG % self.SUBSCRIBED
 		if vars:
 			vars = json.dumps(vars)
-		return super(MailingListMembers, self).create(address=address, name=name, vars=vars, subscribed=subscribed, upsert=upsert)
+		return super(MailingListMembers, self).create(data=locals())
 
 	def update(self, pk, address=None, name=None, vars=None, subscribed=SUBSCRIBED[0]):
 		if subscribed:
 			assert subscribed in self.SUBSCRIBED, INVALID_SUBSCRIBED_MSG % self.SUBSCRIBED
 		if vars:
 			vars = json.dumps(vars)
-		return super(MailingListMembers, self).update(pk, address=address, name=name, vars=vars, subscribed=subscribed)
+		return super(MailingListMembers, self).update(pk, data=locals())
 
 
 class MailingListStats(MailgunAPI):
@@ -49,10 +49,10 @@ class MailingLists(MailgunAPI):
 	}
 
 	def all(self, address=None, limit=100, skip=0):
-		return super(MailingLists, self).all(address=address, limit=limit, skip=skip)
+		return super(MailingLists, self).all(params=locals())
 
 	def create(self, address, name=None, description=None, access_level=ACCESS_LEVELS[0]):
-		return super(MailingLists, self).create(address=address, name=name, description=description, access_level=access_level)
+		return super(MailingLists, self).create(data=locals())
 
 	def update(self, pk, address=None, name=None, description=None, access_level=ACCESS_LEVELS[0]):
-		return super(MailingLists, self).update(pk, address=address, name=name, description=description, access_level=access_level)
+		return super(MailingLists, self).update(pk, data=locals())

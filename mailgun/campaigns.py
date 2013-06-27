@@ -18,7 +18,7 @@ class CampaignEvents(MailgunAPI):
 			assert len(country) == 2, INVALID_COUNTRY_MSG
 		if page:
 			assert page > 0, INVALID_PAGE_MSG
-		return super(CampaignEvents, self).all(event=event, recipient=recipient, country=country, region=region, limit=limit, page=page, count=count)
+		return super(CampaignEvents, self).all(params=locals())
 
 
 class CampaignStats(MailgunAPI):
@@ -28,7 +28,7 @@ class CampaignStats(MailgunAPI):
 	def all(self, groupby=None):
 		if groupby:
 			assert groupby in self.GROUPS, INVALID_GROUP_MSG % (groupby, self.GROUPS)
-		return super(CampaignStats, self).all(groupby=groupby)
+		return super(CampaignStats, self).all(params=locals())
 
 
 class CampaignClicks(MailgunAPI):
@@ -41,7 +41,7 @@ class CampaignClicks(MailgunAPI):
 			assert len(country) == 2, INVALID_COUNTRY_MSG
 		if page:
 			assert page > 0, INVALID_PAGE_MSG
-		return super(CampaignClicks, self).all(groupby=groupby, country=country, region=region, city=city, limit=limit, page=page, count=count)
+		return super(CampaignClicks, self).all(params=locals())
 
 
 class CampaignOpens(CampaignClicks):
@@ -62,7 +62,7 @@ class CampaignComplaints(CampaignClicks):
 		assert groupby in self.GROUPS, INVALID_GROUP_MSG % (groupby, self.GROUPS)
 		if page:
 			assert page > 0, INVALID_PAGE_MSG
-		return super(CampaignComplaints, self).all(groupby=groupby, limit=limit, page=page, count=count)
+		return super(CampaignComplaints, self).all(params=locals())
 
 
 class Campaigns(MailgunAPI):
@@ -78,10 +78,10 @@ class Campaigns(MailgunAPI):
 	}
 
 	def all(self, limit=100, skip=0):
-		return super(Campaigns, self).all(limit=limit, skip=skip)
+		return super(Campaigns, self).all(params=locals())
 
 	def create(self, name, id=None):
-		return super(Campaigns, self).create(name=name, id=id)
+		return super(Campaigns, self).create(data=locals())
 
 	def update(self, pk, name, id=None):
-		return super(Campaigns, self).update(pk, name=name, id=id)
+		return super(Campaigns, self).update(pk, data=locals())
