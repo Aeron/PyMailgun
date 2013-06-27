@@ -73,7 +73,7 @@ class MailgunAPI(object):
 			'data': self._clean(data),
 		}
 		r = requests.request(**kwargs)
-		# print(r.request.method, r.request.url, r.request.body)
+		print(r.request.method, r.request.url, r.request.body)
 		if not r.ok:
 			r.raise_for_status()
 		return r.json()
@@ -82,19 +82,19 @@ class MailgunAPI(object):
 		self._pk = pk
 		return self
 
-	def all(self, **kwargs):
-		return self._request('get', params=locals())
+	def all(self, params=None):
+		return self._request('get', params=params)
 
-	def get(self, pk, **kwargs):
+	def get(self, pk, params=None):
 		self._set_pk(pk)
-		return self._request('get', params=locals())
+		return self._request('get', params=params)
 
-	def create(self, **kwargs):
-		return self._request('post', data=locals())
+	def create(self, data=None):
+		return self._request('post', data=data)
 
-	def update(self, pk, **kwargs):
+	def update(self, pk, data=None):
 		self._set_pk(pk)
-		return self._request('put', data=locals())
+		return self._request('put', data=data)
 
 	def delete(self, pk):
 		return self._request('delete')
