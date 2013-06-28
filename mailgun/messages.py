@@ -18,5 +18,5 @@ class Messages(MailgunAPI):
 		return self._request('post', data=data)
 
 
-class MessagesMime(MailgunAPI):
-	API_NAME = 'messages.mime'
+# class MessagesMime(MailgunAPI):
+# 	API_NAME = 'messages.mime'

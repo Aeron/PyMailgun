@@ -63,7 +63,7 @@ class MailgunAPI(object):
 				del data['self']
 		return data
 
-	def _request(self, method, params=None, data=None):
+	def _request(self, method, params=None, data=None, files=None):
 		assert method.upper() in self.ALLOWED_METHODS, '%s method is not allowed.' % method.upper()
 		kwargs = {
 			'method': method,
@@ -71,6 +71,7 @@ class MailgunAPI(object):
 			'auth': self.auth,
 			'params': self._clean(params),
 			'data': self._clean(data),
+			'files': files,
 		}
 		r = requests.request(**kwargs)
 		print(r.request.method, r.request.url, r.request.body)

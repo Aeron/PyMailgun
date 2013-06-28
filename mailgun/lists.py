@@ -2,32 +2,43 @@
 import json
 from .api import MailgunAPI
 
-INVALID_SUBSCRIBED_MSG = "The `subscribed` must be `%s` or `%s`."
-
 
 class MailingListMembers(MailgunAPI):
 	API_NAME = 'lists'
 	DOMAIN_FREE = True
-	UPSERT = SUBSCRIBED = ('yes', 'no')
 
 	def all(self, subscribed=None, limit=100, skip=0):
-		if subscribed:
-			assert subscribed in self.SUBSCRIBED, INVALID_SUBSCRIBED_MSG % self.SUBSCRIBED
 		return super(MailingListMembers, self).all(params=locals())
 
-	def create(self, address, name=None, vars=None, subscribed=SUBSCRIBED[0], upsert=UPSERT[1]):
-		if subscribed:
-			assert subscribed in self.SUBSCRIBED, INVALID_SUBSCRIBED_MSG % self.SUBSCRIBED
-		if vars:
-			vars = json.dumps(vars)
+	def create(self, address, name=None, vars=None, subscribed=True, upsert=False):
+		data = locals()
+		if data['vars']:
+			data['vars'] = json.dumps(data['vars'])
 		return super(MailingListMembers, self).create(data=locals())
 
-	def update(self, pk, address=None, name=None, vars=None, subscribed=SUBSCRIBED[0]):
-		if subscribed:
-			assert subscribed in self.SUBSCRIBED, INVALID_SUBSCRIBED_MSG % self.SUBSCRIBED
-		if vars:
-			vars = json.dumps(vars)
+	def update(self, pk, address=None, name=None, vars=None, subscribed=True):
+		data = locals()
+		if data['vars']:
+			data['vars'] = json.dumps(data['vars'])
 		return super(MailingListMembers, self).update(pk, data=locals())
+
+	def bulk(self, members, subscribed=True, upsert=False):
+		assert isinstance(members, (list, set, tuple)), 'The `members` must be list, tuple or set.'
+		self._sub = 'members.csv'
+		data = locals()
+		del data['members']
+		files = {
+			# 'members': ('list.csv', self._prepare_members(members)),
+			'members': ('list.csv', "\n".join(members)),
+		}
+		return self._request('post', data=data, files=files)
+
+	# @staticmethod
+	# def _prepare_members(members):  # there is no need to use csv module, data is simple enough
+	# 	for n, member in enumerate(members):
+	# 		if isinstance(member, (list, tuple)):
+	# 			members[n] = "{1} <{0}>".format(member)
+	# 	return "\n".join(members)
 
 
 class MailingListStats(MailgunAPI):
