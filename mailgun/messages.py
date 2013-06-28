@@ -11,10 +11,10 @@ class Messages(MailgunAPI):
 				param = ", ".join(param)
 		data = locals()
 		data['from'] = data.pop('from_address')
-		for param in (o, h, v):
-			if param:
-				for k, v in param.iteritems():
-					data["o:%s" % k] = v
+		for param_name in ('o', 'h', 'v'):
+			if data[param_name] and isinstance(data[param_name], dict):
+				for k, v in data[param_name].iteritems():
+					data["%s:%s" % (param_name, k)] = v
 		return self._request('post', data=data)
 
 
