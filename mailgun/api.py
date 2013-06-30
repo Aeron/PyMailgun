@@ -74,7 +74,7 @@ class MailgunAPI(object):
 			'files': files,
 		}
 		r = requests.request(**kwargs)
-		print(r.request.method, r.request.url, r.request.body)
+		# print(r.request.method, r.request.url, r.request.body)
 		if not r.ok:
 			r.raise_for_status()
 		return r.json()
