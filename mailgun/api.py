@@ -98,4 +98,5 @@ class MailgunAPI(object):
 		return self._request('put', data=data)
 
 	def delete(self, pk):
+		self._set_pk(pk)
 		return self._request('delete')
