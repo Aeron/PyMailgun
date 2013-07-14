@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
 	name="pymailgun",
-	version="0.1.43",
+	version="0.1.45",
 	packages=[
 		'mailgun',
 	],
