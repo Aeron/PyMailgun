@@ -13,6 +13,8 @@ __all__ = (
 
 class Mailgun(object):
 	def __init__(self, api_key, domain):
+		self.api_key = api_key
+		self.domain = domain
 		self.messages = Messages(api_key, domain)
 		self.lists = MailingLists(api_key)
 		self.campaigns = Campaigns(api_key, domain)

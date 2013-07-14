@@ -33,6 +33,13 @@ class MailgunAPI(object):
 				return super(MailgunAPI, self).__getattribute__(name)
 		return self._instances[name]
 
+	# fixing state control for pickle
+	def __getstate__(self):
+		return self.__dict__
+
+	def __setstate__(self, d):
+		self.__dict__.update(d)
+
 	@property
 	def api_url(self):
 		assert self.API_NAME, 'API name not specified.'
