@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
 	name="pymailgun",
-	version="0.2.2",
+	version="0.3.6",
 	packages=[
 		'mailgun',
 	],
@@ -18,7 +18,7 @@ setup(
 	author=u"Eugene “Aeron” Glybin",
 	author_email="aeron@aeron.cc",
 	url="https://github.com/Aeron/PyMailgun",
-	description="Simple Mailgun API wrapper. Only Messages, Mailing Lists (with bulk create) and Campaigns available at this moment.",
+	description="Simple Mailgun API wrapper.",
 	license="LGPLv3",
 	keywords="mailgun api wrapper",
 	classifiers=[
