@@ -8,7 +8,7 @@ import mailgun
 
 if sys.argv[-1] == 'publish':
 	if setuptools_version >= '0.8':
-		os.system('python setup.py sdist sdist_wheel upload')
+		os.system('python setup.py sdist bdist_wheel upload')
 	else:
 		os.system('python setup.py sdist upload')
 	sys.exit()
