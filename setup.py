@@ -1,9 +1,10 @@
 # coding: utf-8
 from setuptools import setup
+import mailgun
 
 setup(
-	name="pymailgun",
-	version="0.4.0",
+	name=mailgun.__title__,
+	version=mailgun.__version__,
 	packages=[
 		'mailgun',
 	],
@@ -15,15 +16,16 @@ setup(
 	package_data={
 		'': [],
 	},
-	author=u"Eugene “Aeron” Glybin",
+	author=mailgun.__author__,
 	author_email="aeron@aeron.cc",
 	url="https://github.com/Aeron/PyMailgun",
 	description="Simple Mailgun API wrapper.",
-	license="LGPLv3",
+	license=mailgun.__license__,
 	keywords="mailgun api wrapper",
 	classifiers=[
 		"Development Status :: 4 - Beta",
 		"Intended Audience :: Developers",
+		'Natural Language :: English',
 		"License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
 		"Topic :: Communications",
 		"Operating System :: OS Independent",

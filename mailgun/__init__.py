@@ -1,11 +1,17 @@
+# coding: utf-8
+
+__title__ = 'pymailgun'
+__version__ = '0.4.0'
+__author__ = u'Eugene “Aeron” Glybin'
+__license__ = 'LGPLv3'
+__copyright__ = 'Copyright 2014 Eugene Glybin'
+
 from .campaigns import Campaigns
 from .lists import MailingLists
 from .messages import Messages
 from .unsubscribes import Unsubscribes
 from .domains import Domains
 
-
-__version__ = '0.4.0'
 __all__ = (
 	'Mailgun',
 	'Messages',
