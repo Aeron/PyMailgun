@@ -1,6 +1,7 @@
 # coding: utf-8
 import json
 from .api import MailgunAPI
+from .exceptions import MailgunValidationError
 
 
 class MailingListMembers(MailgunAPI):
@@ -23,7 +24,8 @@ class MailingListMembers(MailgunAPI):
 		return super(MailingListMembers, self).update(pk, data=locals())
 
 	def bulk(self, members, subscribed=True, upsert=False):
-		assert isinstance(members, (list, set, tuple)), 'The `members` must be list, tuple or set.'
+		if not isinstance(members, (list, set, tuple)):
+			raise MailgunValidationError(message='The `members` must be list, tuple or set.')
 		self._sub = 'members.csv'
 		data = locals()
 		del data['members']

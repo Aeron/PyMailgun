@@ -1,7 +1,6 @@
 # coding: utf-8
 from .api import MailgunAPI
-
-INVALID_SPAM_ACTION_MSG = 'The `%s` spam action is not valid. Valid actions: %s.'
+from .exceptions import MailgunValidationError
 
 
 class Domains(MailgunAPI):
@@ -17,7 +16,8 @@ class Domains(MailgunAPI):
 		return super(Domains, self).get(domain)
 
 	def create(self, name, smtp_password='something', spam_action=SPAM_ACTIONS[0], wildcard=False):
-		assert spam_action in self.SPAM_ACTIONS, INVALID_SPAM_ACTION_MSG % (spam_action, self.SPAM_ACTIONS)
+		if spam_action not in self.SPAM_ACTIONS:
+			raise MailgunValidationError(spam_action, self.SPAM_ACTIONS)
 		return super(Domains, self).create(data=locals())
 
 	def delete(self, domain):

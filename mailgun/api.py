@@ -1,5 +1,6 @@
 # coding: utf-8
 import requests
+from .exceptions import MailgunError
 
 MAILGUN_API_URL = "https://api.mailgun.net/v2"
 
@@ -42,9 +43,10 @@ class MailgunAPI(object):
 
 	@property
 	def api_url(self):
-		assert self.API_NAME, 'API name not specified.'
+		if not self.API_NAME:
+			raise MailgunError('API name not specified.')
 		if self.DOMAIN_FREE is False and self.domain is None:
-			raise Exception('This API call requires to specify domain name.')
+			raise MailgunError('This API call requires to specify domain name.')
 		url = self.API_URL
 		if self.DOMAIN_FREE:
 			self.domain = None
@@ -71,7 +73,8 @@ class MailgunAPI(object):
 		return data
 
 	def _request(self, method, params=None, data=None, files=None):
-		assert method.upper() in self.ALLOWED_METHODS, '%s method is not allowed.' % method.upper()
+		if method.upper() not in self.ALLOWED_METHODS:
+			raise MailgunError('{0} method is not allowed.'.format(method.upper()))
 		kwargs = {
 			'method': method,
 			'url': self.api_url,

@@ -5,6 +5,7 @@ from .unsubscribes import Unsubscribes
 from .domains import Domains
 
 
+__version__ = '0.4.0'
 __all__ = (
 	'Mailgun',
 	'Messages',
