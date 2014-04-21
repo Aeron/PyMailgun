@@ -1,6 +1,18 @@
+#!/usr/bin/env python
 # coding: utf-8
-from setuptools import setup
+import os
+import sys
+
+from setuptools import setup, __version__ as setuptools_version
 import mailgun
+
+if sys.argv[-1] == 'publish':
+	if setuptools_version >= '0.8':
+		os.system('python setup.py sdist sdist_wheel upload')
+	else:
+		os.system('python setup.py sdist upload')
+	sys.exit()
+
 
 setup(
 	name=mailgun.__title__,
