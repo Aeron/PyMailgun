@@ -1,10 +1,16 @@
 # coding: utf-8
 
 __title__ = 'pymailgun'
+__summary__ = "Simple Mailgun API wrapper."
+__uri__ = 'https://github.com/Aeron/PyMailgun'
+
 __version__ = '0.4.0'
-__author__ = u'Eugene “Aeron” Glybin'
+
+__author__ = u"Eugene “Aeron” Glybin"
+__email__ = 'aeron@aeron.cc'
+
 __license__ = 'LGPLv3'
-__copyright__ = 'Copyright 2014 Eugene Glybin'
+__copyright__ = "Copyright 2014 Eugene Glybin"
 
 from .campaigns import Campaigns
 from .lists import MailingLists

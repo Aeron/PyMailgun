@@ -29,9 +29,9 @@ setup(
 		'': [],
 	},
 	author=mailgun.__author__,
-	author_email="aeron@aeron.cc",
-	url="https://github.com/Aeron/PyMailgun",
-	description="Simple Mailgun API wrapper.",
+	author_email=mailgun.__email__,
+	url=mailgun.__uri__,
+	description=mailgun.__summary__,
 	license=mailgun.__license__,
 	keywords="mailgun api wrapper",
 	classifiers=[
