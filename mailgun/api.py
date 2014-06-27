@@ -52,14 +52,19 @@ class MailgunAPI(object):
 			raise MailgunError('API name not specified.')
 		if self.DOMAIN_FREE is False and self.domain is None:
 			raise MailgunError('This API call requires to specify domain name.')
-		url = self.API_URL
 		if self.DOMAIN_FREE:
 			self.domain = None
-		parts = (self.domain, self.API_NAME, self._pk, self._sub, self._sub_pk)
-		for part in parts:
-			if part:
-				url = "%s/%s" % (url, part)
-		return url
+		return reduce(
+			lambda initial, part: '/'.join([initial, part] if part else [initial]),
+			(
+				self.domain,
+				self.API_NAME,
+				self._pk,
+				self._sub,
+				self._sub_pk
+			),
+			self.API_URL
+		)
 
 	def _set_pk(self, pk=None):
 		if pk is not None:
@@ -70,7 +75,7 @@ class MailgunAPI(object):
 
 	def _request(self, method, params=None, data=None, files=None):
 		if method.upper() not in self.ALLOWED_METHODS:
-			raise MailgunError('{0} method is not allowed.'.format(method.upper()))
+			raise MailgunError('{method} method is not allowed.'.format(method=method.upper()))
 		kwargs = {
 			'method': method,
 			'url': self.api_url,
