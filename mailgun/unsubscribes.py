@@ -6,13 +6,19 @@ class Unsubscribes(MailgunAPI):
 	API_NAME = 'unsubscribes'
 
 	def all(self, limit=100, skip=0):
-		return super(Unsubscribes, self).all(params=locals())
+		return super(Unsubscribes, self).all(params=dict(
+			limit=limit,
+			skip=skip
+		))
 
 	def get(self, address):
 		return super(Unsubscribes, self).get(address)
 
 	def create(self, address, tag='*'):
-		return super(Unsubscribes, self).create(data=locals())
+		return super(Unsubscribes, self).create(data=dict(
+			address=address,
+			tag=tag
+		))
 
 	def delete(self, address_or_id):
 		"""Removes an address from the unsubscribes table. Address defines which events to delete.

@@ -4,7 +4,7 @@ __title__ = 'pymailgun'
 __summary__ = "Simple Mailgun API wrapper."
 __uri__ = 'https://github.com/Aeron/PyMailgun'
 
-__version__ = '0.4.0'
+__version__ = '0.6.8'
 
 __author__ = u"Eugene “Aeron” Glybin"
 __email__ = 'aeron@aeron.cc'

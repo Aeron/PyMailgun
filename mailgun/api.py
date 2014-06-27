@@ -23,7 +23,12 @@ class MailgunAPI(object):
 		self._instances = {}
 
 	def __repr__(self):
-		return "%s(%s, %s) instance at %s" % (self.__class__.__name__, self.api_key, self.domain, hex(id(self)))
+		return "{cls}({api_key}, {domain}) instance at {_id:#x}".format(
+			cls=self.__class__.__name__,
+			api_key=self.api_key,
+			domain=self.domain,
+			_id=id(self)
+		)
 
 	def __getattr__(self, name):
 		if name not in self._instances or self._instances[name]._pk != self._pk:
@@ -63,15 +68,6 @@ class MailgunAPI(object):
 			else:
 				self._pk = pk
 
-	@staticmethod
-	def _clean(data=None):
-		if data and isinstance(data, dict):
-			if 'pk' in data:
-				del data['pk']
-			if 'self' in data:
-				del data['self']
-		return data
-
 	def _request(self, method, params=None, data=None, files=None):
 		if method.upper() not in self.ALLOWED_METHODS:
 			raise MailgunError('{0} method is not allowed.'.format(method.upper()))
@@ -79,12 +75,11 @@ class MailgunAPI(object):
 			'method': method,
 			'url': self.api_url,
 			'auth': self.auth,
-			'params': self._clean(params),
-			'data': self._clean(data),
+			'params': params,
+			'data': data,
 			'files': files,
 		}
 		r = requests.request(**kwargs)
-		# print(r.request.method, r.request.url, r.request.body)
 		if not r.ok:
 			r.raise_for_status()
 		return r.json()

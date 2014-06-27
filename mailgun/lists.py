@@ -9,38 +9,39 @@ class MailingListMembers(MailgunAPI):
 	DOMAIN_FREE = True
 
 	def all(self, subscribed=None, limit=100, skip=0):
-		return super(MailingListMembers, self).all(params=locals())
+		return super(MailingListMembers, self).all(params=dict(
+			subscribed=subscribed,
+			limit=limit,
+			skip=skip
+		))
 
 	def create(self, address, name=None, vars=None, subscribed=True, upsert=False):
-		data = locals()
-		if data['vars']:
-			data['vars'] = json.dumps(data['vars'])
-		return super(MailingListMembers, self).create(data=locals())
+		return super(MailingListMembers, self).create(data=dict(
+			address=address,
+			name=name,
+			vars=json.dumps(vars) if vars else None,
+			subscribed=subscribed,
+			upsert=upsert
+		))
 
 	def update(self, pk, address=None, name=None, vars=None, subscribed=True):
-		data = locals()
-		if data['vars']:
-			data['vars'] = json.dumps(data['vars'])
-		return super(MailingListMembers, self).update(pk, data=locals())
+		return super(MailingListMembers, self).update(pk, data=dict(
+			address=address,
+			name=name,
+			vars=json.dumps(vars) if vars else None,
+			subscribed=subscribed
+		))
 
 	def bulk(self, members, subscribed=True, upsert=False):
 		if not isinstance(members, (list, set, tuple)):
 			raise MailgunValidationError(message='The `members` must be list, tuple or set.')
 		self._sub = 'members.csv'
-		data = locals()
-		del data['members']
-		files = {
-			# 'members': ('list.csv', self._prepare_members(members)),
-			'members': ('list.csv', "\n".join(members)),
-		}
-		return self._request('post', data=data, files=files)
-
-	# @staticmethod
-	# def _prepare_members(members):  # there is no need to use csv module, data is simple enough
-	# 	for n, member in enumerate(members):
-	# 		if isinstance(member, (list, tuple)):
-	# 			members[n] = "{1} <{0}>".format(member)
-	# 	return "\n".join(members)
+		return self._request('post', data=dict(
+			subscribed=subscribed,
+			upsert=upsert
+		), files=dict(
+			members=('list.csv', "\n".join(members))
+		))
 
 
 class MailingListStats(MailgunAPI):
@@ -62,10 +63,22 @@ class MailingLists(MailgunAPI):
 	}
 
 	def all(self, address=None, limit=100, skip=0):
-		return super(MailingLists, self).all(params=locals())
+		return super(MailingLists, self).all(params=dict(
+			address=address
+		))
 
 	def create(self, address, name=None, description=None, access_level=ACCESS_LEVELS[0]):
-		return super(MailingLists, self).create(data=locals())
+		return super(MailingLists, self).create(data=dict(
+			address=address,
+			name=name,
+			description=description,
+			access_level=access_level
+		))
 
 	def update(self, pk, address=None, name=None, description=None, access_level=ACCESS_LEVELS[0]):
-		return super(MailingLists, self).update(pk, data=locals())
+		return super(MailingLists, self).update(pk, data=dict(
+			address=address,
+			name=name,
+			description=description,
+			access_level=access_level
+		))

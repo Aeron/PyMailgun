@@ -4,6 +4,9 @@ from .exceptions import MailgunValidationError
 
 INVALID_COUNTRY_MSG = 'Country code must be two-letters length.'
 INVALID_PAGE_MSG = 'The `page` value must be greater than 0.'
+INVALID_CAMPAIGN_NAME_OR_ID_LENGTH = "Campaign name and campaign ID should not exceed the maximum length of 64 characters."
+
+CAMPAIGN_NAME_OR_ID_MAX_LENGTH = 64
 
 
 class CampaignEvents(MailgunAPI):
@@ -17,7 +20,15 @@ class CampaignEvents(MailgunAPI):
 			raise MailgunValidationError(message=INVALID_COUNTRY_MSG)
 		if page and page <= 0:
 			raise MailgunValidationError(message=INVALID_PAGE_MSG)
-		return super(CampaignEvents, self).all(params=locals())
+		return super(CampaignEvents, self).all(params=dict(
+			event=event,
+			recipient=recipient,
+			country=country,
+			region=region,
+			limit=limit,
+			page=page,
+			count=count
+		))
 
 
 class CampaignStats(MailgunAPI):
@@ -27,7 +38,9 @@ class CampaignStats(MailgunAPI):
 	def all(self, groupby=None):
 		if groupby and groupby not in self.GROUPS:
 			raise MailgunValidationError(groupby, self.GROUPS)
-		return super(CampaignStats, self).all(params=locals())
+		return super(CampaignStats, self).all(params=dict(
+			groupby=groupby
+		))
 
 
 class CampaignClicks(MailgunAPI):
@@ -41,7 +54,15 @@ class CampaignClicks(MailgunAPI):
 			raise MailgunValidationError(message=INVALID_COUNTRY_MSG)
 		if page and page <= 0:
 			raise MailgunValidationError(message=INVALID_PAGE_MSG)
-		return super(CampaignClicks, self).all(params=locals())
+		return super(CampaignClicks, self).all(params=dict(
+			groupby=groupby,
+			country=country,
+			region=region,
+			city=city,
+			limit=limit,
+			page=page,
+			count=count
+		))
 
 
 class CampaignOpens(CampaignClicks):
@@ -63,7 +84,12 @@ class CampaignComplaints(CampaignClicks):
 			raise MailgunValidationError(groupby, self.GROUPS)
 		if page and page <= 0:
 			raise MailgunValidationError(message=INVALID_PAGE_MSG)
-		return super(CampaignComplaints, self).all(params=locals())
+		return super(CampaignComplaints, self).all(params=dict(
+			groupby=groupby,
+			limit=limit,
+			page=page,
+			count=count
+		))
 
 
 class Campaigns(MailgunAPI):
@@ -79,10 +105,23 @@ class Campaigns(MailgunAPI):
 	}
 
 	def all(self, limit=100, skip=0):
-		return super(Campaigns, self).all(params=locals())
+		return super(Campaigns, self).all(params=dict(
+			limit=limit,
+			skip=skip
+		))
 
 	def create(self, name, id=None):
-		return super(Campaigns, self).create(data=locals())
+		if len(name) > CAMPAIGN_NAME_OR_ID_MAX_LENGTH or len(str(id)) > CAMPAIGN_NAME_OR_ID_MAX_LENGTH:
+			raise MailgunValidationError(message=INVALID_CAMPAIGN_NAME_OR_ID_LENGTH)
+		return super(Campaigns, self).create(data=dict(
+			name=name,
+			id=id
+		))
 
 	def update(self, pk, name, id=None):
-		return super(Campaigns, self).update(pk, data=locals())
+		if len(name) > CAMPAIGN_NAME_OR_ID_MAX_LENGTH or len(str(id)) > CAMPAIGN_NAME_OR_ID_MAX_LENGTH:
+			raise MailgunValidationError(message=INVALID_CAMPAIGN_NAME_OR_ID_LENGTH)
+		return super(Campaigns, self).update(pk, data=dict(
+			name=name,
+			id=id
+		))

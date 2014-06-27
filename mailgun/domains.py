@@ -10,7 +10,10 @@ class Domains(MailgunAPI):
 	SPAM_ACTIONS = ('disabled', 'tag')
 
 	def all(self, limit=100, skip=0):
-		return super(Domains, self).all(params=locals())
+		return super(Domains, self).all(params=dict(
+			limit=limit,
+			skip=skip
+		))
 
 	def get(self, domain):
 		return super(Domains, self).get(domain)
@@ -18,7 +21,12 @@ class Domains(MailgunAPI):
 	def create(self, name, smtp_password='something', spam_action=SPAM_ACTIONS[0], wildcard=False):
 		if spam_action not in self.SPAM_ACTIONS:
 			raise MailgunValidationError(spam_action, self.SPAM_ACTIONS)
-		return super(Domains, self).create(data=locals())
+		return super(Domains, self).create(data=dict(
+			name=name,
+			smtp_password=smtp_password,
+			spam_action=spam_action,
+			wildcard=wildcard
+		))
 
 	def delete(self, domain):
 		return super(Domains, self).delete(domain)

@@ -13,6 +13,13 @@ if sys.argv[-1] == 'publish':
 		os.system('python setup.py sdist upload')
 	sys.exit()
 
+if sys.argv[-1] == 'build':
+	if setuptools_version >= '0.8':
+		os.system('python setup.py sdist bdist_wheel')
+	else:
+		os.system('python setup.py sdist')
+	sys.exit()
+
 
 setup(
 	name=mailgun.__title__,
